@@ -191,6 +191,17 @@ footer a{color:var(--gold);text-decoration:none;font-size:12px;letter-spacing:.0
         <video id="demoVideo" muted playsinline>
           <source src="https://res.cloudinary.com/doxsjisyx/video/upload/v1780060492/marcopolo-demo-v2.mp4" type="video/mp4">
         </video>
+      </div>
+      <div class="video-controls">
+        <button class="vc-btn" onclick="togglePlay()">
+          <svg viewBox="0 0 16 16"><path id="playIcon" d="M4,2 L14,8 L4,14Z"/></svg>
+        </button>
+        <div class="vc-progress" id="vcProgress" onclick="seekVideo(event)">
+          <div class="vc-bar" id="vcBar"></div>
+        </div>
+        <span class="vc-time" id="vcTime">0:00</span>
+      </div>
+      <div style="display:none">
 
       </div>
     </div>
