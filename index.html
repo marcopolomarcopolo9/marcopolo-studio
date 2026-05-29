@@ -16,7 +16,7 @@ body{background:var(--black);color:var(--white);font-family:'DM Sans',sans-serif
 
 /* NAV */
 nav{padding:0 56px;height:64px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border);background:rgba(10,10,10,.95);backdrop-filter:blur(12px);position:sticky;top:0;z-index:100}
-.logo{font-family:'Playfair Display',serif;font-size:17px;letter-spacing:.04em}
+.logo{font-family:'Playfair Display',serif;font-size:17px;letter-spacing:.04em} @media(min-width:900px){.logo{font-size:25px}}
 .logo em{color:var(--gold);font-style:normal}
 .nav-links{display:flex;align-items:center;gap:40px}
 .nav-links a{text-decoration:none;font-size:13px;color:rgba(245,242,238,.5);letter-spacing:.05em;transition:color .2s}
@@ -55,6 +55,14 @@ nav{padding:0 56px;height:64px;display:flex;align-items:center;justify-content:s
 .mockup-url{flex:1;background:#0d0d0d;padding:4px 12px;font-size:11px;color:#555;border-radius:3px;margin:0 10px;font-family:monospace}
 .mockup-body{position:relative;background:#080808;line-height:0}
 .mockup-body video{width:100%;display:block;max-height:380px;object-fit:cover}
+
+.video-controls{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#0d0d0d;border-top:1px solid var(--border)}
+.vc-btn{background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center;color:#c8a96e;flex-shrink:0}
+.vc-btn svg{width:16px;height:16px;fill:#c8a96e}
+.vc-progress{flex:1;height:3px;background:#222;border-radius:2px;cursor:pointer;position:relative}
+.vc-bar{height:100%;background:#c8a96e;border-radius:2px;width:0%;transition:width .1s linear;pointer-events:none}
+.vc-time{font-size:11px;color:#555;font-family:monospace;flex-shrink:0;letter-spacing:.03em}
+
 .mockup-tag{position:absolute;bottom:12px;left:12px;background:rgba(10,10,10,.85);border:1px solid var(--border);padding:7px 12px;backdrop-filter:blur(6px)}
 .mockup-tag p{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1px}
 .mockup-tag span{font-size:11px;color:rgba(245,242,238,.5)}
@@ -111,7 +119,7 @@ footer a{color:var(--gold);text-decoration:none;font-size:12px;letter-spacing:.0
 
 @media(max-width:900px){
   nav{padding:0 24px}
-  .nav-links a:not(.nav-cta){display:none}
+  .nav-links a:not(.nav-cta){display:none} .nav-cta{display:none}
   .hero{grid-template-columns:1fr;padding:60px 24px 48px;gap:40px}
   .hero-video{order:-1}
   .hero-stats{grid-template-columns:repeat(3,1fr)}
@@ -180,7 +188,7 @@ footer a{color:var(--gold);text-decoration:none;font-size:12px;letter-spacing:.0
 
       </div>
       <div class="mockup-body">
-        <video autoplay muted loop playsinline>
+        <video id="demoVideo" muted playsinline>
           <source src="https://res.cloudinary.com/doxsjisyx/video/upload/v1780060492/marcopolo-demo-v2.mp4" type="video/mp4">
         </video>
 
@@ -274,6 +282,42 @@ footer a{color:var(--gold);text-decoration:none;font-size:12px;letter-spacing:.0
   <p>© 2026 · Suisse 🇨🇭</p>
   <a href="https://wa.me/41788783351">+41 78 878 33 51</a>
 </footer>
+
+
+<script>
+const video = document.getElementById('demoVideo');
+const bar = document.getElementById('vcBar');
+const time = document.getElementById('vcTime');
+const playIcon = document.getElementById('playIcon');
+
+function fmt(s){const m=Math.floor(s/60);return m+':'+(Math.floor(s%60)+'').padStart(2,'0')}
+
+function togglePlay(){
+  if(video.paused){video.play();playIcon.setAttribute('d','M4,2H6V14H4ZM10,2H12V14H10Z')}
+  else{video.pause();playIcon.setAttribute('d','M4,2 L14,8 L4,14Z')}
+}
+
+video.addEventListener('timeupdate',()=>{
+  if(!video.duration)return;
+  bar.style.width=(video.currentTime/video.duration*100)+'%';
+  time.textContent=fmt(video.currentTime);
+});
+
+video.addEventListener('ended',()=>{
+  playIcon.setAttribute('d','M4,2 L14,8 L4,14Z');
+});
+
+function seekVideo(e){
+  const rect=document.getElementById('vcProgress').getBoundingClientRect();
+  const pct=(e.clientX-rect.left)/rect.width;
+  video.currentTime=pct*video.duration;
+}
+
+// Autoplay
+video.play().then(()=>{
+  playIcon.setAttribute('d','M4,2H6V14H4ZM10,2H12V14H10Z');
+}).catch(()=>{});
+</script>
 
 </body>
 </html>
